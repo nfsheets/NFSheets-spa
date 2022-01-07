@@ -4,6 +4,9 @@ const sheetId = "1v8-OmiTqEMG5EmUJlLxaU3YLC2JsgZDrIZgHuh-gYx0";
 
 const sheetRange = "A1:F6";
 
+/*
+    - get all of the data values to get the font size, and then generate the 
+*/
 export default {
   async getGoogleSheetValues() {
     console.log("GETTING GS values");
