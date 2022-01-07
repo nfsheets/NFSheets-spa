@@ -4,6 +4,7 @@ const sheetId = "1v8-OmiTqEMG5EmUJlLxaU3YLC2JsgZDrIZgHuh-gYx0";
 
 const sheetRange = "A1:F6";
 
+// use this https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId} instead
 /*
     - get all of the data values to get the font size, and then generate the 
 */
@@ -18,5 +19,9 @@ export default {
 
     console.log("resp");
     console.log(resp);
+  },
+  generateOverlayGrid() {
+    // the A row is 24px in height
+    // the lineheight: normal multipler is 1.2
   },
 };

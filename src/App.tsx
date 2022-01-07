@@ -25,7 +25,7 @@ function App() {
           }}
           width={"70%"}
           height={500}
-          src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQAZspYrhIxKEHM5ajmQ-iTS99ikcPcMlRQfMy28zQjCo3a6QIYwFLXXl3zDE-L8_eFve5K5vOnXBOG/pubhtml?gid=0&amp;single=true&amp;chrome=false&amp;widget=false&amp;headers=true&amp;rm=minimal"
+          src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQAZspYrhIxKEHM5ajmQ-iTS99ikcPcMlRQfMy28zQjCo3a6QIYwFLXXl3zDE-L8_eFve5K5vOnXBOG/pubhtml?gid=0&amp;single=true&amp;chrome=false&amp;widget=false&amp;headers=true"
         ></iframe>
 
         <CellEditor />

@@ -3,6 +3,8 @@ import {
   Button,
   Select,
   Input,
+  PinInput,
+  PinInputField,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -15,6 +17,9 @@ export default function CellEditor() {
   const [value, setValue] = useState("");
   const [fontSize, setFontSize] = useState<number>(10);
   const [fontColor, setFontColor] = useState("");
+
+  const [cellCol, setCellCol] = useState("");
+  const [cellRow, setCellRow] = useState<number>(0);
 
   const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -31,6 +36,14 @@ export default function CellEditor() {
     setFontColor(event.target.value);
   };
 
+  const handleColChange = (eventString: string) => {
+    setCellCol(eventString);
+  };
+
+  const handleRowChange = (eventString: string) => {
+    setCellRow(Number(eventString));
+  };
+
   return (
     <Box
       display="inline-block"
@@ -40,7 +53,16 @@ export default function CellEditor() {
       boxShadow="md"
       py="4"
     >
-      <Text my="1"> No selected cell</Text>
+      <Box mx="8">
+        <Text my="1"> Select a cell</Text>
+        <PinInput onChange={handleColChange} type="alphanumeric">
+          <PinInputField />
+        </PinInput>
+        <PinInput onChange={handleRowChange} type="number">
+          <PinInputField />
+        </PinInput>
+      </Box>
+
       <Box fontSize="md" textAlign="left" mx="8">
         <Text mt="2">Cell value</Text>
         <Input value={value} onChange={handleValueChange} />
