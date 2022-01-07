@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import SheetService from "./services/sheet-service";
 
 function App() {
+  const getSheetValues = async () => {
+    const values = await SheetService.getGoogleSheetValues();
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <iframe
+        width={800}
+        height={800}
+        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQAZspYrhIxKEHM5ajmQ-iTS99ikcPcMlRQfMy28zQjCo3a6QIYwFLXXl3zDE-L8_eFve5K5vOnXBOG/pubhtml?widget=true&amp;headers=false"
+      ></iframe>
+
+      <div>
+        <div> sheet set up </div>
+        <button onClick={getSheetValues}> get sheet values </button>
+      </div>
     </div>
   );
 }
