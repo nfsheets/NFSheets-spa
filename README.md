@@ -4,6 +4,8 @@ Create a spreadsheet collaboratively on the blockchain.
 
 A project for the [Harmony University Hackathon](https://taikai.network/en/harmonyprotocol/hackathons/hackthefuture/overview).
 
+![](./diagram.png)
+
 ## Project Components
 
 - Twitter/Discord/etc. communities
