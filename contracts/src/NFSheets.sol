@@ -170,20 +170,6 @@ contract NFSheets is
     }
 
     /**
-     * @dev Gets the current price.
-     */
-    function getPrice() public view returns (uint256) {
-        return price;
-    }
-
-    /**
-     * @dev Allows the contract owner to change the mint price.
-     */
-    function setPrice(uint256 newPrice) public onlyOwner {
-        price = newPrice;
-    }
-
-    /**
      * @dev Gets the cell value for a given token id.
      */
     function getValue(uint256 tokenId)
@@ -226,6 +212,30 @@ contract NFSheets is
         spreadsheet[tokenId].attributes[key] = value;
     }
 
+    /**
+     * @dev Gets the current price.
+     */
+    function getPrice() public view returns (uint256) {
+        return price;
+    }
+
+    /**
+     * @dev Allows the contract owner to change the mint price.
+     */
+    function setPrice(uint256 newPrice) public onlyOwner {
+        price = newPrice;
+    }
+
+    /**
+     * Allows the contract owner to upgrade the NFSheetsUtils contract
+     * (e.g. to add support for new attributes)
+     */
+    function setNfsheetsUtilsAddress(
+        address nfsheetsUtilsAddress
+    ) public onlyOwner {
+        nfsheetsUtils = NFSheetsUtils(nfsheetsUtilsAddress);
+    }
+
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -252,10 +262,10 @@ contract NFSheets is
         Address.sendValue(payable(msg.sender), address(this).balance);
     }
 
-    constructor(address nfsheetsUtilsContractAddress)
+    constructor(address nfsheetsUtilsAddress)
         ERC721("NFSheets", "XLS")
         Ownable()
     {
-        nfsheetsUtils = NFSheetsUtils(nfsheetsUtilsContractAddress);
+        nfsheetsUtils = NFSheetsUtils(nfsheetsUtilsAddress);
     }
 }
