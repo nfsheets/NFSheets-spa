@@ -1,0 +1,19 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "compile": "truffle compile && rm -rf ./build"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "truffle": "^5.4.27",
+    "truffle-flattener": "^1.5.0"
+  }
+}
