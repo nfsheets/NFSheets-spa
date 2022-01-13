@@ -22,6 +22,8 @@ import Web3Context from "../context/Web3Context";
 import { cellIdToTokenId, columnLetterToColumnNumber } from "../utils";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+const ERC721_NONEXISTENT_TOKEN_ERROR =
+  "ERC721: owner query for nonexistent token";
 
 const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
   const { provider, nfsheetsContract, address, chainId } =
@@ -59,15 +61,16 @@ const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
             setValue(newValue);
             setLoadingOwner(false);
           } catch (err) {
-            const maybeMessage = (err as any)?.data?.message;
+            const maybeEthErrorMessage = (err as any)?.data?.message;
+            const maybeHarmonyErrorMessage = (err as any)?.errorArgs[0];
             if (
-              maybeMessage?.includes(
-                "ERC721: owner query for nonexistent token"
-              )
+              maybeEthErrorMessage?.includes(ERC721_NONEXISTENT_TOKEN_ERROR) ||
+              maybeHarmonyErrorMessage?.includes(ERC721_NONEXISTENT_TOKEN_ERROR)
             ) {
               setOwner(ZERO_ADDRESS);
             } else {
               setOwner("");
+              console.error(err);
             }
             setValue("");
             setLoadingOwner(false);
@@ -110,7 +113,10 @@ const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
   let buttonMessage = "Loading...";
   let disabled;
   let buttonOnClick = () => {};
-  if (parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10) !== chainId) {
+  if (!provider) {
+    buttonMessage = "Wallet Not Connected";
+    disabled = true;
+  } else if (parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10) !== chainId) {
     buttonMessage = "Wrong Network";
     disabled = true;
   } else if (column === "") {
@@ -118,9 +124,6 @@ const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
     disabled = true;
   } else if (typeof row === "undefined") {
     buttonMessage = "Enter Row";
-    disabled = true;
-  } else if (!provider) {
-    buttonMessage = "Wallet Not Connected";
     disabled = true;
   } else if (loadingOwner) {
     buttonMessage = "Checking Availability...";
