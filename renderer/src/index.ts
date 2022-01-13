@@ -208,6 +208,6 @@ async function main() {
 }
 
 // Run main function every minute
-cron.schedule("* * * * *", () => {
+setInterval(() => {
   main();
-});
+}, 60000);
