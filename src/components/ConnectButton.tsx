@@ -4,7 +4,9 @@ import { useContext } from "react";
 import Web3Context from "../context/Web3Context";
 import { getNfsheetsContract, getWeb3Provider } from "../utils";
 
-const ConnectButton = () => {
+const ConnectButton: React.FC<React.ComponentProps<typeof Button>> = (
+  props
+) => {
   const { provider, setProvider, setNfsheetsContract, address, chainId } =
     useContext(Web3Context);
 
@@ -18,6 +20,7 @@ const ConnectButton = () => {
       }}
       disabled={!!provider}
       colorScheme="green"
+      {...props}
     >
       {!provider
         ? "Connect Wallet"

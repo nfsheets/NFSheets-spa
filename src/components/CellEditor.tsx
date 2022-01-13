@@ -1,11 +1,12 @@
-import { Box, Text } from "@chakra-ui/layout";
 import {
+  Box,
   Button,
   Flex,
   Heading,
   Input,
   PinInput,
   PinInputField,
+  Text,
 } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { debounce } from "lodash";
