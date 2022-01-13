@@ -13,7 +13,7 @@ export default function NavBar() {
       textAlign="left"
       alignItems="center"
     >
-      <Heading fontSize="xl">NFSheets</Heading>
+      <Heading fontSize="xl">NFSheet.com</Heading>
       <Spacer />
       <Link mx={5} href="https://discord.com/invite/BEbJVRpz">
         <Icon

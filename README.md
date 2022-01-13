@@ -1,4 +1,4 @@
-# NFSheets
+# NFSheet
 
 Create a spreadsheet collaboratively on the blockchain.
 
