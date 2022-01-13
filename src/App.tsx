@@ -50,7 +50,7 @@ function App() {
       }}
     >
       <Helmet>
-        <title>NFSheet</title>
+        <title>NFSheets</title>
       </Helmet>
       <Box w="100%" h="100%" bg="gray.100">
         <NavBar />
