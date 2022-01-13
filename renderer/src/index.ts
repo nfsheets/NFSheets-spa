@@ -29,6 +29,7 @@ type ContractData = {
   values: string[];
 };
 type GoogleSheetsData = sheets_v4.Schema$ValueRange[];
+type GoogleSheetsRequests = sheets_v4.Schema$Request[];
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_ENDPOINT);
 const googleApiAuth = new google.auth.JWT({
@@ -48,41 +49,42 @@ const nfsheetsContract = new ethers.Contract(
   provider
 );
 
+// Hardcoded for now
+const NUM_ROWS = 1000;
+const LETTERS = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];
+
 function tokenIdToCellId(tokenId: number): string {
-  // Hardcoded for now
-  const NUM_ROWS = 1000;
-  const letters = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
   const row = ((tokenId - 1) % NUM_ROWS) + 1;
   const column = Math.floor((tokenId - 1) / NUM_ROWS) + 1;
 
-  return `${letters[column - 1]}${row}`;
+  return `${LETTERS[column - 1]}${row}`;
 }
 
 async function readContractData(): Promise<ContractData> {
@@ -101,8 +103,8 @@ async function readContractData(): Promise<ContractData> {
 
 function convertContractDataToGoogleSheetsData(
   contractData: ContractData
-): GoogleSheetsData {
-  const data = [];
+): [GoogleSheetsData, GoogleSheetsRequests] {
+  const data: GoogleSheetsData = [];
   const { tokenIds, values } = contractData;
   for (let i = 0; i < tokenIds.length; i += 1) {
     const tokenId = tokenIds[i];
@@ -113,11 +115,58 @@ function convertContractDataToGoogleSheetsData(
       values: [[value]],
     });
   }
-  return data;
+
+  // Create requests to turn the background color of all purchased cells to gray
+  const requests: GoogleSheetsRequests = [];
+  for (let i = 0; i < tokenIds.length; i += 1) {
+    const tokenId = tokenIds[i].toNumber();
+    const row = ((tokenId - 1) % NUM_ROWS) + 1;
+    const column = Math.floor((tokenId - 1) / NUM_ROWS) + 1;
+
+    requests.push({
+      updateCells: {
+        range: {
+          sheetId: 0,
+          startColumnIndex: column - 1,
+          endColumnIndex: column,
+          startRowIndex: row - 1,
+          endRowIndex: row,
+        },
+        fields: "userEnteredFormat(backgroundColor)",
+        rows: [
+          {
+            values: [
+              {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 15,
+                    green: 15,
+                    blue: 15,
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    });
+  }
+
+  return [data, requests];
 }
 
-async function syncDataToGoogleSheets(googleSheetsData: GoogleSheetsData) {
+async function syncDataToGoogleSheets(
+  googleSheetsData: GoogleSheetsData,
+  googleSheetsRequests: GoogleSheetsRequests
+) {
   return new Promise((resolve, reject) => {
+    sheets.spreadsheets.batchUpdate({
+      spreadsheetId: process.env.NFSHEETS_GOOGLE_SHEET_ID,
+      requestBody: {
+        requests: googleSheetsRequests,
+      },
+    });
+
     sheets.spreadsheets.values.batchUpdate(
       {
         spreadsheetId: process.env.NFSHEETS_GOOGLE_SHEET_ID,
@@ -141,9 +190,9 @@ async function main() {
   try {
     console.log("Starting sync...");
     const contractData = await readContractData();
-    const googleSheetsData =
+    const [googleSheetsData, googleSheetsRequests] =
       convertContractDataToGoogleSheetsData(contractData);
-    await syncDataToGoogleSheets(googleSheetsData);
+    await syncDataToGoogleSheets(googleSheetsData, googleSheetsRequests);
     console.log("Synced!");
   } catch (err) {
     console.error(err);

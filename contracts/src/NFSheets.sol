@@ -18,6 +18,14 @@ contract NFSheetsUtils {
     // A - Z
     uint256 public constant NUM_COLUMNS = 26;
     uint256 public constant NUM_ROWS = 1000;
+    string[26] private LETTERS = [
+        "A", "B", "C", "D", "E",
+        "F", "G", "H", "I", "J",
+        "K", "L", "M", "N", "O",
+        "P", "Q", "R", "S", "T",
+        "U", "V", "W", "X", "Y",
+        "Z"
+    ];
 
     /**
      * Converts a cell ID to a token ID
@@ -42,21 +50,13 @@ contract NFSheetsUtils {
      */
     function tokenIdToCellId(
         uint256 tokenId
-    ) external pure returns (string memory) {
-        string[26] memory letters = [
-            "A", "B", "C", "D", "E",
-            "F", "G", "H", "I", "J",
-            "K", "L", "M", "N", "O",
-            "P", "Q", "R", "S", "T",
-            "U", "V", "W", "X", "Y",
-            "Z"
-        ];
+    ) external view returns (string memory) {
         uint256 row = (tokenId - 1) % NUM_ROWS + 1;
         uint256 column = (tokenId - 1) / NUM_ROWS + 1;
 
         string memory output = string(
             abi.encodePacked(
-                letters[column - 1],
+                LETTERS[column - 1],
                 Strings.toString(row)
             )
         );

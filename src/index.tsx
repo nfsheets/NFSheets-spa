@@ -1,11 +1,11 @@
+import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-// 1. import `ChakraProvider` component
-import { ChakraProvider } from "@chakra-ui/react";
+import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>

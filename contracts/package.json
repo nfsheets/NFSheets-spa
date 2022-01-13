@@ -4,7 +4,8 @@
   "description": "",
   "main": "",
   "scripts": {
-    "compile": "truffle compile && rm -rf ./build"
+    "//0": "Copy into src/generated to get around CRA import limitation",
+    "compile": "truffle compile && rm -rf ./build && cp -r ../generated ../src/generated"
   },
   "author": "",
   "license": "UNLICENSED",
