@@ -26,6 +26,7 @@
     "web3modal": "^1.9.5"
   },
   "scripts": {
+    "prebuild": "cd contracts && npm run compile",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

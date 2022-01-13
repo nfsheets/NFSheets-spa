@@ -5,7 +5,9 @@
   "main": "",
   "scripts": {
     "//0": "Copy into src/generated to get around CRA import limitation",
-    "compile": "truffle compile && rm -rf ./build && cp -r ../generated ../src/generated"
+    "compile": "truffle compile && rm -rf ./build && cp -r ../generated ../src/generated",
+    "//1": "See this link for awk script rationale: https://github.com/nomiclabs/truffle-flattener/issues/55",
+    "flatten": "truffle-flattener src/NFSheets.sol | awk '/SPDX-License-Identifier/&&c++>0 {next} 1' | awk '/pragma experimental ABIEncoderV2;/&&c++>0 {next} 1' > ../generated/NFSheetsFlattened.sol"
   },
   "author": "",
   "license": "UNLICENSED",
