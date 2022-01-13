@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { createContext } from "react";
 
-interface Web3Context {
+interface IWeb3Context {
   provider?: ethers.providers.Web3Provider;
   nfsheetsContract?: ethers.Contract;
   address?: string;
@@ -12,7 +12,7 @@ interface Web3Context {
   setChainId(newChainId: number): void;
 }
 
-const Web3Context = createContext<Web3Context>({
+const Web3Context = createContext<IWeb3Context>({
   setProvider: () => {},
   setNfsheetsContract: () => {},
   setAddress: () => {},

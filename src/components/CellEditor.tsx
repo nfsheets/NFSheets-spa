@@ -12,9 +12,9 @@ import { BigNumber } from "ethers";
 import { debounce } from "lodash";
 import React, {
   ChangeEvent,
-  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -43,34 +43,37 @@ const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
     }
   }, [nfsheetsContract]);
 
-  const getOwner = useCallback(
-    debounce(async (column: string, row: number) => {
-      const tokenId = cellIdToTokenId(column, row);
-      if (nfsheetsContract) {
-        try {
-          const newOwner = await nfsheetsContract.ownerOf(
-            BigNumber.from(tokenId)
-          );
-          const newValue = await nfsheetsContract.getValue(
-            BigNumber.from(tokenId)
-          );
-          setOwner(newOwner);
-          setValue(newValue);
-          setLoadingOwner(false);
-        } catch (err) {
-          const maybeMessage = (err as any)?.data?.message;
-          if (
-            maybeMessage?.includes("ERC721: owner query for nonexistent token")
-          ) {
-            setOwner(ZERO_ADDRESS);
-          } else {
-            setOwner("");
+  const getOwner = useMemo(
+    () =>
+      debounce(async (column: string, row: number) => {
+        const tokenId = cellIdToTokenId(column, row);
+        if (nfsheetsContract) {
+          try {
+            const newOwner = await nfsheetsContract.ownerOf(
+              BigNumber.from(tokenId)
+            );
+            const newValue = await nfsheetsContract.getValue(
+              BigNumber.from(tokenId)
+            );
+            setOwner(newOwner);
+            setValue(newValue);
+            setLoadingOwner(false);
+          } catch (err) {
+            const maybeMessage = (err as any)?.data?.message;
+            if (
+              maybeMessage?.includes(
+                "ERC721: owner query for nonexistent token"
+              )
+            ) {
+              setOwner(ZERO_ADDRESS);
+            } else {
+              setOwner("");
+            }
+            setValue("");
+            setLoadingOwner(false);
           }
-          setValue("");
-          setLoadingOwner(false);
         }
-      }
-    }, 1000),
+      }, 1000),
     [setOwner, nfsheetsContract]
   );
 
