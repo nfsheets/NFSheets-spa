@@ -5,6 +5,8 @@ import path from "path";
 
 import { abi as nfsheetsAbi } from "../../generated/NFSheets.json";
 
+require("dotenv").config({ path: path.resolve(__dirname, "..", "..", ".env") });
+
 if (!process.env.NFSHEETS_CONTRACT_ADDRESS) {
   throw new Error("Missing env var: `NFSHEETS_CONTRACT_ADDRESS`");
 }

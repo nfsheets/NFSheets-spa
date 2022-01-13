@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node -r dotenv/config src/index dotenv_config_path=../.env",
+    "dev": "ts-node src/index",
     "build": "rm -rf build && ncc build src/index.ts -o build",
     "start": "pm2 start build/index.js --cron \"* * * * *\"",
     "test": "echo \"Error: no test specified\" && exit 1"
