@@ -183,12 +183,13 @@ contract NFSheets is
     Ownable
 {
     struct Cell {
+        string cellId;
         string value;
         mapping(string => string) attributes;
     }
 
     modifier onlyTokenOwner(uint256 tokenId) {
-        require(msg.sender == super.ownerOf(tokenId));
+        require(msg.sender == ERC721.ownerOf(tokenId), "You do not own this cell.");
         _;
     }
 
@@ -239,7 +240,11 @@ contract NFSheets is
         return output;
     }
 
-    function mint(uint256 column, uint256 row) public payable nonReentrant {
+    function mint(
+        uint256 column,
+        uint256 row,
+        string memory value
+    ) public payable nonReentrant {
         require(msg.value >= price, "Not enough value sent; check price!");
         require(
             column >= 1 && column <= nfsheetsUtils.NUM_COLUMNS(),
@@ -251,9 +256,59 @@ contract NFSheets is
         );
 
         uint256 tokenId = nfsheetsUtils.cellIdToTokenId(column, row);
-
+        string memory cellId = nfsheetsUtils.tokenIdToCellId(tokenId);
+        Cell storage cell = spreadsheet[tokenId];
+        cell.cellId = cellId;
+        cell.value = value;
         _safeMint(_msgSender(), tokenId);
     }
+
+    /**
+     * @dev Gets a range of cell values using the internal index of
+     * `ERC721Enumerable`.
+     */
+     function getValuesRange(uint start, uint end)
+        public view returns (uint256[] memory, string[] memory)
+    {
+        uint totalSupply = ERC721Enumerable.totalSupply();
+        if (end > totalSupply) {
+            end = totalSupply;
+        }
+        require(end >= start, "End must be greater than or equal to start");
+        uint256 length = end - start;
+        uint256[] memory tokenIds = new uint256[](length);
+        string[] memory values = new string[](length);
+        for (uint256 i = 0; i < length; i += 1) {
+            uint256 tokenId = ERC721Enumerable.tokenByIndex(start + i);
+            tokenIds[i] = tokenId;
+            values[i] = spreadsheet[tokenId].value;
+        }
+        return (tokenIds, values);
+     }
+
+    /**
+     * @dev Gets a range of cell attributes using the internal index of
+     * `ERC721Enumerable`.
+     */
+    function getAttributesRange(uint start, uint end, string memory attribute)
+        public view returns (uint256[] memory, string[] memory)
+    {
+        uint totalSupply = ERC721Enumerable.totalSupply();
+        if (end > totalSupply) {
+            end = totalSupply;
+        }
+        require(end >= start, "End must be greater than or equal to start");
+        uint length = end - start;
+        uint256[] memory tokenIds = new uint256[](length);
+        string[] memory attributes = new string[](length);
+        for (uint i = 0; i < length; i += 1) {
+            uint256 tokenId = ERC721Enumerable.tokenByIndex(start + i);
+            tokenIds[i] = tokenId;
+            attributes[i] = spreadsheet[tokenId].attributes[attribute];
+        }
+        return (tokenIds, attributes);
+     }
+
 
     /**
      * @dev Gets the cell value for a given token id.
@@ -313,7 +368,7 @@ contract NFSheets is
     }
 
     /**
-     * Allows the contract owner to upgrade the NFSheetsUtils contract
+     * @dev Allows the contract owner to upgrade the NFSheetsUtils contract
      * (e.g. to add support for new attributes)
      */
     function setNfsheetsUtilsAddress(
