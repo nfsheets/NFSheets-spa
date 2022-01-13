@@ -192,8 +192,13 @@ async function main() {
     const contractData = await readContractData();
     const [googleSheetsData, googleSheetsRequests] =
       convertContractDataToGoogleSheetsData(contractData);
-    await syncDataToGoogleSheets(googleSheetsData, googleSheetsRequests);
-    console.log("Synced!");
+
+    if (googleSheetsData.length === 0 && googleSheetsRequests.length === 0) {
+      console.log("No data to sync, skipping this run!");
+    } else {
+      await syncDataToGoogleSheets(googleSheetsData, googleSheetsRequests);
+      console.log("Synced!");
+    }
   } catch (err) {
     console.error(err);
   }
