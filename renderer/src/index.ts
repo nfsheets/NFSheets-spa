@@ -1,3 +1,4 @@
+import cron from "node-cron";
 import { BigNumber, ethers } from "ethers";
 import fs from "fs";
 import { google, sheets_v4 } from "googleapis";
@@ -206,4 +207,7 @@ async function main() {
   }
 }
 
-main();
+// Run main function every minute
+cron.schedule("* * * * *", () => {
+  main();
+});

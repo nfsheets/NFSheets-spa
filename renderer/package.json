@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node src/index",
     "build": "rm -rf build && ncc build src/index.ts -o build",
-    "start": "pm2 start build/index.js --cron \"* * * * *\"",
+    "start": "pm2 start build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,10 +14,12 @@
   "dependencies": {
     "ethers": "^5.5.3",
     "googleapis": "^39.2.0",
+    "node-cron": "^3.0.0",
     "pm2": "^5.1.2",
     "typescript": "^4.5.4"
   },
   "devDependencies": {
+    "@types/node-cron": "^3.0.1",
     "@vercel/ncc": "^0.33.1",
     "dotenv": "^11.0.0",
     "ts-node": "^10.4.0"
