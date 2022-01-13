@@ -141,7 +141,7 @@ const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
           await nfsheetsContract.setValue(tokenId, value);
         }
       } finally {
-        setLoadingTransaction(false);
+        setTimeout(() => setLoadingTransaction(false), 5000);
       }
     };
   } else if (owner === ZERO_ADDRESS) {
@@ -156,7 +156,7 @@ const CellEditor: React.FC<React.ComponentProps<typeof Box>> = (props) => {
           });
         }
       } finally {
-        setLoadingTransaction(false);
+        setTimeout(() => setLoadingTransaction(false), 5000);
       }
     };
   } else {
