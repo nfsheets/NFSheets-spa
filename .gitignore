@@ -30,3 +30,6 @@ generated/
 
 # google cloud key
 nfsheets-*.json
+
+# vscode settings
+.vscode
